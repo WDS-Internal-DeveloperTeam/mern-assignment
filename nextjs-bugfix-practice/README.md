@@ -1,6 +1,6 @@
-# Debugging Practice Project
+# Debugging Practice Assignment
 
-This is a full-stack Next.js + Express + PostgreSQL project containing 3-4 intentional bugs for interview practice.
+This is a full-stack Next.js + Express + PostgreSQL project containing  bugs for this Assignment
 
 ## Setup Instructions
 
