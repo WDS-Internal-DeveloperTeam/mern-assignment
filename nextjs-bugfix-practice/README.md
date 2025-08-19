@@ -28,15 +28,25 @@ This is a full-stack Next.js + Express + PostgreSQL project containing 3-4 inten
 
 ## The Challenge
 
-This is a full-stack application with several bugs that need to be fixed. You have 30-35 minutes to identify and fix as many issues as you can find.
+This is a full-stack application with several bugs that need to be fixed and a new feature to be implemented. You have 45 minutes total.
 
-The bugs range from simple to complex and may involve:
+### Part 1: Bug Fixing (30-35 minutes)
+Find and fix as many bugs as you can. The issues range from simple to complex and may involve:
 - Frontend functionality
 - Backend operations
 - Database interactions
 - Application configuration
 - Performance issues
 - Error handling
+
+### Part 2: Feature Implementation (10-15 minutes)
+Add a "Delete User" feature:
+- Add a delete button next to each user
+- Implement a DELETE /api/users/:id endpoint
+- Handle the deletion in the frontend
+- Update the UI accordingly
+
+Note: Implement the feature only after fixing critical bugs to ensure proper functionality.
 
 ### Success Criteria
 - Users should load correctly on the homepage
