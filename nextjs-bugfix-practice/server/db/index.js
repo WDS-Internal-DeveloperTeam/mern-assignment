@@ -7,7 +7,9 @@ const MAX_CONNECTIONS = 100;
 // BUG: Issue4 - Connection issues might occur in production
 const pool = new Pool({
   connectionString: process.env.PGURL,
-  ssl: true
+  ssl: false,
+  password: 'admin',
+  user: 'postgres'
 });
 
 const initDB = async () => {

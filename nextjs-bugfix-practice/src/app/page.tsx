@@ -11,13 +11,26 @@ export default function Home() {
   const fetchUsers = async () => {
     const response = await fetch('http://localhost:3001/api/users');
     const data = await response.json();
-    setUsers(data);
+    setUsers(data.data);
   };
 
   // BUG: Issue5 - Data fetching can be unreliable
   useEffect(() => {
     let ignore = false;
-    fetchUsers();
+    const fetchData = async () => {
+      try {
+        const users = await fetchUsers();
+        if (!ignore) {
+          // Do something with users, e.g. setUsers(users)
+        }
+      } catch (error) {
+        if (!ignore) {
+          console.error('Failed to fetch users:', error);
+        }
+      }
+  };
+
+  fetchData();
     return () => { ignore = true };
   }, []);
 
@@ -35,7 +48,7 @@ export default function Home() {
     if (response.ok) {
       const newUser = await response.json();
       // BUG: Issue1 - State management issue
-      setUsers(users.push(newUser));
+      setUsers(newUser.data);
       setName('');
       setEmail('');
     }
@@ -70,7 +83,7 @@ export default function Home() {
       </form>
 
       <div className="grid gap-4">
-        {users.map((user: { id: Key | null | undefined; name: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; email: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; }) => (
+        {users.map((user: { id: Key | null | undefined; name: string | null | undefined; email: string | null | undefined; }) => (
           <div key={user.id} className="border p-4 rounded">
             <h3 className="font-bold">{user.name}</h3>
             <p className="text-gray-600">{user.email}</p>

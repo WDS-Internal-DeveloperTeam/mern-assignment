@@ -12,24 +12,41 @@ app.use(express.json());
 initDB();
 
 // BUG: Issue2 - Something's wrong with the query result
-app.get('/api/users', (req, res) => {
-  const query = pool.query('SELECT * FROM users ORDER BY id DESC');
-  res.json(query);
+app.get('/api/users', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM users ORDER BY id DESC');
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).json({ error: 'Failed to fetch users' });
+  }
 });
 
 // BUG: Issue6 - Long-running operations can hang
 app.post('/api/users', async (req, res) => {
   const { name, email } = req.body;
+
+  // Optional: Validate input
+  if (!name || !email) {
+    return res.status(400).json({ error: 'Name and email are required' });
+  }
+
   try {
-    // BUG: Issue3 - DB operation fails under certain conditions
+    // ✅ FIXED: Correct table name (assumed 'users')
     const result = await pool.query(
-      'INSERT INTO user (name, email) VALUES ($1, $2) RETURNING *',
+      'INSERT INTO users (name, email) VALUES ($1, $2) RETURNING *',
       [name, email]
     );
-    res.json(result.rows[0]);
+    res.status(201).json(result.rows[0]);
   } catch (error) {
-    // Missing proper error handling for unique constraint violation
-    res.status(500).json({ error: 'Server error' });
+    console.error('Error inserting user:', error);
+
+    if (error.code === '23505') {
+      // Unique constraint violation (e.g., duplicate email)
+      res.status(409).json({ error: 'Email already exists' });
+    } else {
+      res.status(500).json({ error: 'Failed to create user' });
+    }
   }
 });
 
